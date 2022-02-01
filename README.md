@@ -36,7 +36,11 @@ Log in the cluster using Openshift CLI:
 
 After seeing `Login Succeeded` output, now we can add credentials of a user who can access to the repo that we just created in Step 1.
 
-On the left side of the webpage, under `Workloads` section, please hit the `Secrets` tab. Then create `Create` > `Source secret`. 
+On the left side of OpenShift UI, under `Workloads` section, please hit the `Secrets` tab. Then create `Create` > `Source secret`. 
+
+![image](https://user-images.githubusercontent.com/25952802/151937376-803fef43-8f8a-431c-9183-252ef8bc3b0e.png)
+![image](https://user-images.githubusercontent.com/25952802/151937483-5a7a2cc9-2e98-49ef-9001-70457ae0c892.png)
+
 You can either set basic authentication or SSH. I used username and token.
 
 After setting the `Source secret`, we can create a new app in the cluster. Repo URL and the source secret are required:
@@ -67,11 +71,18 @@ Output should be similar to this:
 ## 3. Monitoring process from UI
 
 To see how image building and containerization going, please go to `Workloads` > `Pods` section. Your `build` will be visible. 
+
+![image](https://user-images.githubusercontent.com/25952802/151937787-5460800a-bee7-441a-96d0-4ec5d41847d2.png)
+
 Please click on the pod and select `Logs` tab to see command line and outputs. It will result as `Completed` after a while.
+
+![image](https://user-images.githubusercontent.com/25952802/151937914-b6f47f8f-89eb-4ece-9ab6-845c90440e13.png)
 
 When the build is completed, there will be another pod under `Pods` section. Basically, one is for building the app and the other is for serving it.
 
-First pod is build, and second pod is for deployment. Please check the second pod's Logs to see the output. It is working fine if it is giving the following output: 
+![image](https://user-images.githubusercontent.com/25952802/151942183-60dc3ef9-ed9b-40b0-8832-62add033375b.png)
+
+First pod is for build, and second pod is for deployment. Please check the second pod's Logs to see the output. It is working fine if it is giving the following output: 
 
 ```
 Spark NLP Version : 3.4.0
@@ -87,7 +98,7 @@ Download done! Loading the resource.
 ----------------------------------------------------------------------------------------------------
 ```
 **!!!WARNING!!!**
-Since the `Dockerfile` does not contain  continuous operations (i.e. model serving), it might throw a `CrashLoopBackOff` error. Please modify the scripts and configs according to your goal.
+This example Dockerfile image has been designed to start a Spark NLP session, run a Spark NLP Pipeline and finish the execution / terminate the pod. If you want to keep you session alive so that pods attend incoming requests, please include and run a web framework in your Dockerfile, as for example FastAPI, as described [here](https://fastapi.tiangolo.com/deployment/docker/)
 
 ## 4. Any doubt?
 Write us to support@johnsnowlabs.com
